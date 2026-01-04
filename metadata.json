@@ -1,0 +1,7 @@
+{
+  "name": "Proto Maker",
+  "description": "A professional-grade interactive activity prototyping tool powered by Gemini AI. Create slides, add interactive elements, and generate complete educational content using natural language prompts.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
