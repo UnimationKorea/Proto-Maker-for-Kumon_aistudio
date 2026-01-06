@@ -1,6 +1,37 @@
 
-export type StageType = 'handwriting' | 'drag_drop' | 'speech';
-export type InputType = 'pad' | 'direct';
+export type StageType = 'normal' | 'hint_audio' | 'drag_drop';
+export type InputType = 'pad' | 'direct' | 'drag';
+
+// Added EditorMode for Header component
+export type EditorMode = 'edit' | 'preview';
+
+// Added Interaction for Preview and PropertyPanel components
+export interface Interaction {
+  trigger: 'click' | 'hover';
+  action: 'none' | 'next_slide' | 'prev_slide' | 'goto_slide' | 'show_message' | 'play_sound';
+  targetSlide?: number;
+  message?: string;
+}
+
+// Added ActivityElement for Stage and PropertyPanel components
+export interface ActivityElement {
+  id: string;
+  type: 'text' | 'image' | 'button' | 'shape';
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  content: string;
+  styles: any;
+  interaction?: Interaction;
+}
+
+// Added Slide for Stage and Preview components
+export interface Slide {
+  id: string;
+  backgroundColor: string;
+  elements: ActivityElement[];
+}
 
 export interface Target {
   x: number;
@@ -16,11 +47,11 @@ export interface Token {
 }
 
 export interface ActivityStage {
-  id: string;
+  id: number;
   type: StageType;
-  inputType?: InputType;
+  inputType: InputType;
   title: string;
-  instructions?: string;
+  subText?: string;
   sentence?: {
     pre: string;
     post: string;
@@ -29,15 +60,15 @@ export interface ActivityStage {
   targets?: Target[];
   hintText?: string[];
   audioWord?: string;
-  lang?: string;
+  maxAudioPlays?: number;
   tokens?: Token[];
   sourceItems?: string[];
+  lang?: string;
 }
 
 export interface Activity {
   title: string;
-  description: string;
   stages: ActivityStage[];
+  // Added slides to support components that use a slide-based structure
+  slides: Slide[];
 }
-
-export type EditorMode = 'edit' | 'preview';
