@@ -18,7 +18,7 @@ const INITIAL_ACTIVITY: Activity = {
       targets: [{ x: 440, y: 340, width: 140, height: 120 }, { x: 600, y: 340, width: 140, height: 120 }] 
     },
     { 
-      id: 3, type: 'hint_audio', inputType: 'pad', title: "Level 3", 
+      id: 3, type: 'hint_audio', inputType: 'direct', title: "Level 3", 
       sentence: { pre: "나는", post: "에 갑니다.", y: 400 }, 
       targets: [{ x: 440, y: 340, width: 140, height: 120 }, { x: 600, y: 340, width: 140, height: 120 }], 
       hintText: ["학", "교"], audioWord: "학교" 
@@ -36,7 +36,6 @@ const INITIAL_ACTIVITY: Activity = {
       sourceItems: ["ma", "chī", "le"]
     }
   ],
-  // Added empty slides array to satisfy updated Activity interface
   slides: []
 };
 
@@ -59,7 +58,6 @@ const App: React.FC = () => {
 
   return (
     <div className="w-screen h-screen bg-slate-50 flex flex-col">
-      {/* 상단바: AI 검색 */}
       <div className="h-20 bg-white border-b border-slate-200 px-8 flex items-center justify-between z-50">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -70,43 +68,18 @@ const App: React.FC = () => {
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{activity.title}</p>
           </div>
         </div>
-
         <div className="flex items-center gap-4 flex-1 max-w-xl mx-10">
-          <input 
-            type="text"
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
-            placeholder="주제를 입력해 새로운 학습을 생성하세요 (예: 중국어 과일 이름)"
-            className="flex-1 h-12 bg-slate-100 border-none rounded-2xl px-6 text-sm focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
-          />
-          <button 
-            onClick={handleGenerate}
-            disabled={isGenerating}
-            className="h-12 px-6 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:bg-slate-800 disabled:opacity-50 transition-all whitespace-nowrap"
-          >
-            {isGenerating ? "생성 중..." : "AI 생성"}
-          </button>
+          <input type="text" value={prompt} onChange={(e) => setPrompt(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleGenerate()} placeholder="주제를 입력하세요 (예: 기초 중국어 회화)" className="flex-1 h-12 bg-slate-100 border-none rounded-2xl px-6 text-sm outline-none" />
+          <button onClick={handleGenerate} disabled={isGenerating} className="h-12 px-6 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all">{isGenerating ? "생성 중..." : "AI 생성"}</button>
         </div>
       </div>
-
-      {/* 메인 캔버스 영역 */}
       <div className="flex-1 relative">
-        <ActivityCanvas 
-          stage={activity.stages[currentIdx]}
-          onNext={() => currentIdx < activity.stages.length - 1 && setCurrentIdx(currentIdx + 1)}
-          onPrev={() => currentIdx > 0 && setCurrentIdx(currentIdx - 1)}
-          isFirst={currentIdx === 0}
-          isLast={currentIdx === activity.stages.length - 1}
-          stageInfo={`${currentIdx + 1}`}
-        />
+        <ActivityCanvas stage={activity.stages[currentIdx]} onNext={() => currentIdx < activity.stages.length - 1 && setCurrentIdx(currentIdx + 1)} onPrev={() => currentIdx > 0 && setCurrentIdx(currentIdx - 1)} isFirst={currentIdx === 0} isLast={currentIdx === activity.stages.length - 1} stageInfo={`${currentIdx + 1}`} />
       </div>
-
       {isGenerating && (
         <div className="fixed inset-0 bg-white/80 backdrop-blur flex flex-col items-center justify-center z-[100]">
           <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-6"></div>
           <h2 className="text-xl font-bold text-slate-800">Gemini AI가 학습 액티비티를 설계하고 있습니다...</h2>
-          <p className="text-slate-500 mt-2">좌표 계산 및 상호작용 로직 최적화 중</p>
         </div>
       )}
     </div>
